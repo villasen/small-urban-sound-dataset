@@ -90,6 +90,7 @@ FLAGS = None
 def main(_):
   # Set the verbosity based on flags (default is INFO, so we see all messages)
   tf.compat.v1.logging.set_verbosity(FLAGS.verbosity)
+  
 
   # Start a new TensorFlow session.
   sess = tf.compat.v1.InteractiveSession()
@@ -236,10 +237,10 @@ def main(_):
             dropout_prob: 0.5
         })
     train_writer.add_summary(train_summary, training_step)
-    tf.compat.v1.logging.info(
-        'Step #%d: rate %f, accuracy %.1f%%, cross entropy %f' %
-        (training_step, learning_rate_value, train_accuracy * 100,
-         cross_entropy_value))
+   # tf.compat.v1.logging.info(
+   #     'Step #%d: rate %f, accuracy %.1f%%, cross entropy %f' %
+   #    (training_step, learning_rate_value, train_accuracy * 100,
+   #      cross_entropy_value))
     is_last_step = (training_step == training_steps_max)
     if (training_step % FLAGS.eval_step_interval) == 0 or is_last_step:
       set_size = audio_processor.set_size('validation')
