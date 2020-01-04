@@ -93,7 +93,7 @@ def prepare_model_settings(label_count, sample_rate, clip_duration_ms,
 
 
 def create_model(fingerprint_input, model_settings, model_architecture,
-                 is_training, runtime_settings=None):
+                 model_size_info, is_training, runtime_settings=None):
   """Builds a model of the requested architecture compatible with the settings.
 
   There are many possible ways of deriving predictions from a spectrogram
@@ -147,13 +147,14 @@ def create_model(fingerprint_input, model_settings, model_architecture,
     return create_martin_urban_conv_model(fingerprint_input, model_settings,
                                           is_training)
   elif model_architecture == 'ds_cnn':
-    return create_ds_cnn_model(fingerprint_input, model_settings,
-                                is_training)
+      return create_ds_cnn_model(fingerprint_input, model_settings,
+                                  model_size_info, is_training)
+  
   else:
     raise Exception('model_architecture argument "' + model_architecture +
                     '" not recognized, should be one of "single_fc", "conv",' +
                     ' "low_latency_conv, "low_latency_svdf",' +
-                    ' "tiny_conv", or "tiny_embedding_conv"')
+                    ' "tiny_conv", or "tiny_embedding_conv"' + ' "ds_cnn"')
 
 
 def load_variables_from_checkpoint(sess, start_checkpoint):
@@ -1038,8 +1039,7 @@ def create_martin_urban_conv_model(fingerprint_input, model_settings,
 
 
 
-def create_ds_cnn_model(fingerprint_input, model_settings, model_size_info, 
-                          is_training):
+def create_ds_cnn_model(fingerprint_input, model_settings, model_size_info, is_training):
   """Builds a model with depthwise separable convolutional neural network
   Model definition is based on https://arxiv.org/abs/1704.04861 and
   Tensorflow implementation: https://github.com/Zehaos/MobileNet

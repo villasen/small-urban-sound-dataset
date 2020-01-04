@@ -139,7 +139,9 @@ def main(_):
       fingerprint_input,
       model_settings,
       FLAGS.model_architecture,
+      FLAGS.model_size_info,
       is_training=True)
+
 
   # Define loss and optimizer
   ground_truth_input = tf.compat.v1.placeholder(
@@ -456,6 +458,13 @@ if __name__ == '__main__':
       type=str,
       default='mfcc',
       help='Spectrogram processing mode. Can be "mfcc", "average", or "micro"')
+  parser.add_argument(
+      '--model_size_info',
+      type=int,
+      nargs="+",
+      default=[5,64,10,4,2,2,64,3,3,1,1,64,3,3,1,1,64,3,3,1,1,64,3,3,1,1],
+      help='Model dimensions - different for various models')
+
 
   # Function used to parse --verbosity argument
   def verbosity_arg(value):
