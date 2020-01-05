@@ -1089,13 +1089,13 @@ def create_ds_cnn_model(fingerprint_input, model_settings, model_size_info, is_t
                                                   kernel_size=kernel_size,
                                                   scope=sc+'/dw_conv')
 
-    #bn = slim.batch_norm(depthwise_conv, scope=sc+'/dw_conv/batch_norm')
-    #pointwise_conv = slim.convolution2d(bn,
-      #                                  num_pwc_filters,
-      #                                  kernel_size=[1, 1],
-      #                                  scope=sc+'/pw_conv')
-   # bn = slim.batch_norm(pointwise_conv, scope=sc+'/pw_conv/batch_norm')
-   # return bn
+    bn = slim.batch_norm(depthwise_conv, scope=sc+'/dw_conv/batch_norm')
+    pointwise_conv = slim.convolution2d(bn,
+                                        num_pwc_filters,
+                                       kernel_size=[1, 1],
+                                        scope=sc+'/pw_conv')
+    bn = slim.batch_norm(pointwise_conv, scope=sc+'/pw_conv/batch_norm')
+    return bn
 
 
   if is_training:
