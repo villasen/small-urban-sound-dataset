@@ -1089,12 +1089,12 @@ def create_ds_cnn_model(fingerprint_input, model_settings, model_size_info, is_t
                                                   kernel_size=kernel_size,
                                                   scope=sc+'/dw_conv')
 
-    bn = slim.batch_norm(depthwise_conv, scope=sc+'/dw_conv/batch_norm')
+    #bn = slim.batch_norm(depthwise_conv, scope=sc+'/dw_conv/batch_norm')
     pointwise_conv = slim.convolution2d(bn,
                                         num_pwc_filters,
                                         kernel_size=[1, 1],
                                         scope=sc+'/pw_conv')
-    bn = slim.batch_norm(pointwise_conv, scope=sc+'/pw_conv/batch_norm')
+   # bn = slim.batch_norm(pointwise_conv, scope=sc+'/pw_conv/batch_norm')
     return bn
 
 
@@ -1139,16 +1139,16 @@ def create_ds_cnn_model(fingerprint_input, model_settings, model_size_info, is_t
                         weights_initializer=slim.initializers.xavier_initializer(),
                         biases_initializer=slim.init_ops.zeros_initializer(),
                         outputs_collections=[end_points_collection]):
-      with slim.arg_scope([slim.batch_norm],
-                          is_training=is_training,
-                          decay=0.96,
-                          updates_collections=None,
-                          activation_fn=tf.nn.relu):
+     # with slim.arg_scope([slim.batch_norm],
+     #                     is_training=is_training,
+      #                    decay=0.96,
+      #                    updates_collections=None,
+      #                    activation_fn=tf.nn.relu):
         for layer_no in range(0,num_layers):
           if layer_no==0:
             net = slim.convolution2d(fingerprint_4d, conv_feat[layer_no],\
                       [conv_kt[layer_no], conv_kf[layer_no]], stride=[conv_st[layer_no], conv_sf[layer_no]], padding='SAME', scope='conv_1')
-            net = slim.batch_norm(net, scope='conv_1/batch_norm')
+         #   net = slim.batch_norm(net, scope='conv_1/batch_norm')
           else:
             net = _depthwise_separable_conv(net, conv_feat[layer_no], \
                       kernel_size = [conv_kt[layer_no],conv_kf[layer_no]], \
