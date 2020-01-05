@@ -160,7 +160,7 @@ def main(_):
   create_inference_graph(
       FLAGS.wanted_words, FLAGS.sample_rate, FLAGS.clip_duration_ms,
       FLAGS.clip_stride_ms, FLAGS.window_size_ms, FLAGS.window_stride_ms,
-      FLAGS.feature_bin_count, FLAGS.model_architecture, FLAGS.preprocess
+      FLAGS.feature_bin_count, FLAGS.model_architecture, FLAGS.preprocess,
       FLAGS.model_size_info)
   if FLAGS.quantize:
     tf.contrib.quantize.create_eval_graph()
