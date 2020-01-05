@@ -62,7 +62,7 @@ FLAGS = None
 
 def create_inference_graph(wanted_words, sample_rate, clip_duration_ms,
                            clip_stride_ms, window_size_ms, window_stride_ms,
-                           feature_bin_count, model_architecture, preprocess):
+                           feature_bin_count, model_architecture, preprocess, model_size_info ):
   """Creates an audio model with the nodes needed for inference.
 
   Uses the supplied arguments to create a model, and inserts the input and
@@ -160,7 +160,8 @@ def main(_):
   create_inference_graph(
       FLAGS.wanted_words, FLAGS.sample_rate, FLAGS.clip_duration_ms,
       FLAGS.clip_stride_ms, FLAGS.window_size_ms, FLAGS.window_stride_ms,
-      FLAGS.feature_bin_count, FLAGS.model_architecture, FLAGS.preprocess)
+      FLAGS.feature_bin_count, FLAGS.model_architecture, FLAGS.preprocess
+      FLAGS.model_size_info)
   if FLAGS.quantize:
     tf.contrib.quantize.create_eval_graph()
   models.load_variables_from_checkpoint(sess, FLAGS.start_checkpoint)
@@ -231,6 +232,12 @@ if __name__ == '__main__':
       type=bool,
       default=False,
       help='Whether to train the model for eight-bit deployment')
+  parser.add_argument(
+      '--model_size_info',
+      type=int,
+      nargs="+",
+      default=[5,64,10,4,2,2,64,3,3,1,1,64,3,3,1,1,64,3,3,1,1,64,3,3,1,1],
+      help='Model dimensions - different for various models')    
   parser.add_argument(
       '--preprocess',
       type=str,
