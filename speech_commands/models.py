@@ -1095,7 +1095,7 @@ def create_ds_cnn_model(fingerprint_input, model_settings, model_size_info, is_t
       #                                  kernel_size=[1, 1],
       #                                  scope=sc+'/pw_conv')
    # bn = slim.batch_norm(pointwise_conv, scope=sc+'/pw_conv/batch_norm')
-    return bn
+   # return bn
 
 
   if is_training:
