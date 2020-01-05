@@ -146,8 +146,8 @@ def create_inference_graph(wanted_words, sample_rate, clip_duration_ms,
   reshaped_input = tf.reshape(fingerprint_input, [-1, fingerprint_size])
 
   logits = models.create_model(
-      reshaped_input, model_settings, model_architecture, is_training=False,
-      runtime_settings=runtime_settings)
+      reshaped_input, model_settings, model_architecture, model_size_info,
+      is_training=False, runtime_settings=runtime_settings)
 
   # Create an output to use for inference.
   tf.nn.softmax(logits, name='labels_softmax')
