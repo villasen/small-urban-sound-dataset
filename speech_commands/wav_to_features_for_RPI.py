@@ -74,8 +74,15 @@ def wav_to_features(sample_rate, clip_duration_ms, window_size_ms,
                                                  sess)
   features = results[0]
 
+  _results=np.save('/content/input_files/dog.npy', results)
+  
+  print("results[0]")
+  print(features)
+  print("Shape:")
+  print(_results.shape)
   print("Resulst:")
   print(results)
+  
 #   variable_base = os.path.splitext(os.path.basename(input_wav).lower())[0]
 
 #   # Save a C source file containing the feature data as an array.
