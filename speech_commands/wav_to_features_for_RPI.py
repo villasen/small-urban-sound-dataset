@@ -40,6 +40,7 @@ import tensorflow as tf
 import input_data
 import models
 from tensorflow.python.platform import gfile
+import numpy as np
 
 FLAGS = None
 
