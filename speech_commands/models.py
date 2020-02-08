@@ -980,115 +980,115 @@ def create_martin_urban_conv_model(fingerprint_input, model_settings,
                               [-1, input_time_size, input_frequency_size, 1])
 
 
-# First layer
-  first_filter_width = 8
-  first_filter_height = 10
-  first_filter_count = 8
-  first_weights = tf.compat.v1.get_variable(
-      name='first_weights',
-      initializer=tf.compat.v1.truncated_normal_initializer(stddev=0.01),
-      shape=[first_filter_height, first_filter_width, 1, first_filter_count])
-  first_bias = tf.compat.v1.get_variable(
-      name='first_bias',
-      initializer=tf.compat.v1.zeros_initializer,
-      shape=[first_filter_count])
-  first_conv_stride_x = 2
-  first_conv_stride_y = 2
-  first_conv = tf.nn.conv2d(
-      input=fingerprint_4d, filters=first_weights,
-      strides=[1, first_conv_stride_y, first_conv_stride_x, 1],
-      padding='SAME') + first_bias
-  first_relu = tf.nn.relu(first_conv)
-  if is_training:
-    first_dropout = tf.compat.v1.nn.dropout(first_relu, dropout_prob)
-  else:
-    first_dropout = first_relu
+# # First layer
+#   first_filter_width = 8
+#   first_filter_height = 10
+#   first_filter_count = 8
+#   first_weights = tf.compat.v1.get_variable(
+#       name='first_weights',
+#       initializer=tf.compat.v1.truncated_normal_initializer(stddev=0.01),
+#       shape=[first_filter_height, first_filter_width, 1, first_filter_count])
+#   first_bias = tf.compat.v1.get_variable(
+#       name='first_bias',
+#       initializer=tf.compat.v1.zeros_initializer,
+#       shape=[first_filter_count])
+#   first_conv_stride_x = 2
+#   first_conv_stride_y = 2
+#   first_conv = tf.nn.conv2d(
+#       input=fingerprint_4d, filters=first_weights,
+#       strides=[1, first_conv_stride_y, first_conv_stride_x, 1],
+#       padding='SAME') + first_bias
+#   first_relu = tf.nn.relu(first_conv)
+#   if is_training:
+#     first_dropout = tf.compat.v1.nn.dropout(first_relu, dropout_prob)
+#   else:
+#     first_dropout = first_relu
 
 
 
 
-tf.nn.separable_conv2d(
-    input,
-    depthwise_filter,
-    pointwise_filter,
-    strides,
-    padding,
-    rate=None,
-    name=None,
-    data_format=None,
-    dilations=None
-)
+# tf.nn.separable_conv2d(
+#     input,
+#     depthwise_filter,
+#     pointwise_filter,
+#     strides,
+#     padding,
+#     rate=None,
+#     name=None,
+#     data_format=None,
+#     dilations=None
+# )
 
-tf.nn.conv2d(
-    input,
-    filters,
-    strides,
-    padding,
-    data_format='NHWC',
-    dilations=None,
-    name=None
-)
+# tf.nn.conv2d(
+#     input,
+#     filters,
+#     strides,
+#     padding,
+#     data_format='NHWC',
+#     dilations=None,
+#     name=None
+# )
 
-# Second layer
-  second_filter_width = 8
-  second_filter_height = 10
-  second_filter_count = 8
-  second_weights = tf.compat.v1.get_variable(
-      name='second_weights',
-      initializer=tf.compat.v1.truncated_normal_initializer(stddev=0.01),
-      shape=[
-          second_filter_height, second_filter_width, first_filter_count,
-          second_filter_count
-      ])
-  second_bias = tf.compat.v1.get_variable(
-      name='second_bias',
-      initializer=tf.compat.v1.zeros_initializer,
-      shape=[second_filter_count])
-  second_conv_stride_x = 8
-  second_conv_stride_y = 8
-  # skip pointwise by setting filters=None
-  second_conv = tf.nn.separable_conv2d(
-      input=first_dropout, filters=None,
-      strides=[1, second_conv_stride_y, second_conv_stride_x, 1],
-      padding='SAME') + second_bias
+# # Second layer
+#   second_filter_width = 8
+#   second_filter_height = 10
+#   second_filter_count = 8
+#   second_weights = tf.compat.v1.get_variable(
+#       name='second_weights',
+#       initializer=tf.compat.v1.truncated_normal_initializer(stddev=0.01),
+#       shape=[
+#           second_filter_height, second_filter_width, first_filter_count,
+#           second_filter_count
+#       ])
+#   second_bias = tf.compat.v1.get_variable(
+#       name='second_bias',
+#       initializer=tf.compat.v1.zeros_initializer,
+#       shape=[second_filter_count])
+#   second_conv_stride_x = 8
+#   second_conv_stride_y = 8
+#   # skip pointwise by setting filters=None
+#   second_conv = tf.nn.separable_conv2d(
+#       input=first_dropout, filters=None,
+#       strides=[1, second_conv_stride_y, second_conv_stride_x, 1],
+#       padding='SAME') + second_bias
   
-      pointwise_conv = tf.nn.convolution2d(second_conv,
-                                        first_weights,
-                                       kernel_size=[1, 1],
-                                        scope=sc+'/pw_conv')
+#       pointwise_conv = tf.nn.convolution2d(second_conv,
+#                                         first_weights,
+#                                        kernel_size=[1, 1],
+#                                         scope=sc+'/pw_conv')
 
 
-  pointwise_conv = tf.nn.convolution2d(second_conv, )
+#   pointwise_conv = tf.nn.convolution2d(second_conv, )
 
-  second_relu = tf.nn.relu(second_conv)
-  if is_training:
-    second_dropout = tf.compat.v1.nn.dropout(second_relu, dropout_prob)
-  else:
-    second_dropout = second_relu
+#   second_relu = tf.nn.relu(second_conv)
+#   if is_training:
+#     second_dropout = tf.compat.v1.nn.dropout(second_relu, dropout_prob)
+#   else:
+#     second_dropout = second_relu
 
-  second_dropout_shape = second_dropout.get_shape()
-  second_dropout_output_width = second_dropout_shape[2]
-  second_dropout_output_height = second_dropout_shape[1]
-  second_dropout_element_count = int(second_dropout_output_width *
-                                     second_dropout_output_height *
-                                     second_filter_count)
-  flattened_second_dropout = tf.reshape(second_dropout,
-                                        [-1, second_dropout_element_count])
-  label_count = model_settings['label_count']
-  final_fc_weights = tf.compat.v1.get_variable(
-      name='final_fc_weights',
-      initializer=tf.compat.v1.truncated_normal_initializer(stddev=0.01),
-      shape=[second_dropout_element_count, label_count])
-  final_fc_bias = tf.compat.v1.get_variable(
-      name='final_fc_bias',
-      initializer=tf.compat.v1.zeros_initializer,
-      shape=[label_count])
-  final_fc = (
-      tf.matmul(flattened_second_dropout, final_fc_weights) + final_fc_bias)
-  if is_training:
-    return final_fc, dropout_prob
-  else:
-    return final_fc
+#   second_dropout_shape = second_dropout.get_shape()
+#   second_dropout_output_width = second_dropout_shape[2]
+#   second_dropout_output_height = second_dropout_shape[1]
+#   second_dropout_element_count = int(second_dropout_output_width *
+#                                      second_dropout_output_height *
+#                                      second_filter_count)
+#   flattened_second_dropout = tf.reshape(second_dropout,
+#                                         [-1, second_dropout_element_count])
+#   label_count = model_settings['label_count']
+#   final_fc_weights = tf.compat.v1.get_variable(
+#       name='final_fc_weights',
+#       initializer=tf.compat.v1.truncated_normal_initializer(stddev=0.01),
+#       shape=[second_dropout_element_count, label_count])
+#   final_fc_bias = tf.compat.v1.get_variable(
+#       name='final_fc_bias',
+#       initializer=tf.compat.v1.zeros_initializer,
+#       shape=[label_count])
+#   final_fc = (
+#       tf.matmul(flattened_second_dropout, final_fc_weights) + final_fc_bias)
+#   if is_training:
+#     return final_fc, dropout_prob
+#   else:
+#     return final_fc
 
 
 def create_martin_tiny_conv_model(fingerprint_input, model_settings, is_training):
