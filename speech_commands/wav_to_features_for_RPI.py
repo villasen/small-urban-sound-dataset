@@ -79,8 +79,10 @@ def wav_to_features(sample_rate, clip_duration_ms, window_size_ms,
   
   print("results[0]")
   print(features)
-  print("Shape:")
-  print(_results.shape)
+  print("results Shape:")
+  print(results.shape)
+  print("features shape")
+  print(feature.shape)
   print("Resulst:")
   print(results)
   
