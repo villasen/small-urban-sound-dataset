@@ -856,7 +856,7 @@ def create_tiny_embedding_conv_model(fingerprint_input, model_settings,
   first_conv_stride_x = 2
   first_conv_stride_y = 2
   first_conv = tf.nn.conv2d(
-      input=fingerprint_4d, filters=first_weights,
+      input=fingerprint_4d, filters=first_weights, # weights=kernel
       strides=[1, first_conv_stride_y, first_conv_stride_x, 1],
       padding='SAME') + first_bias
   first_relu = tf.nn.relu(first_conv)
@@ -980,29 +980,30 @@ def create_martin_urban_conv_model(fingerprint_input, model_settings,
                               [-1, input_time_size, input_frequency_size, 1])
 
 
-# # First layer
-#   first_filter_width = 8
-#   first_filter_height = 10
-#   first_filter_count = 8
-#   first_weights = tf.compat.v1.get_variable(
-#       name='first_weights',
-#       initializer=tf.compat.v1.truncated_normal_initializer(stddev=0.01),
-#       shape=[first_filter_height, first_filter_width, 1, first_filter_count])
-#   first_bias = tf.compat.v1.get_variable(
-#       name='first_bias',
-#       initializer=tf.compat.v1.zeros_initializer,
-#       shape=[first_filter_count])
-#   first_conv_stride_x = 2
-#   first_conv_stride_y = 2
-#   first_conv = tf.nn.conv2d(
-#       input=fingerprint_4d, filters=first_weights,
-#       strides=[1, first_conv_stride_y, first_conv_stride_x, 1],
-#       padding='SAME') + first_bias
-#   first_relu = tf.nn.relu(first_conv)
-#   if is_training:
-#     first_dropout = tf.compat.v1.nn.dropout(first_relu, dropout_prob)
-#   else:
-#     first_dropout = first_relu
+# First layer
+  first_filter_width = 4
+  first_filter_height = 10
+  first_filter_count = 64
+  first_weights = tf.compat.v1.get_variable(
+      name='first_weights',
+      initializer=tf.compat.v1.truncated_normal_initializer(stddev=0.01),
+      shape=[first_filter_height, first_filter_width, 1, first_filter_count])
+  first_bias = tf.compat.v1.get_variable(
+      name='first_bias',
+      initializer=tf.compat.v1.zeros_initializer,
+      shape=[first_filter_count])
+  first_conv_stride_x = 2
+  first_conv_stride_y = 2
+  first_conv = tf.nn.conv2d(
+      input=fingerprint_4d, filters=first_weights,
+      strides=[1, first_conv_stride_y, first_conv_stride_x, 1],
+      padding='SAME') + first_bias
+  first_relu = tf.nn.relu(first_conv)
+  
+  if is_training:
+    first_dropout = tf.compat.v1.nn.dropout(first_relu, dropout_prob)
+  else:
+    first_dropout = first_relu
 
 
 
@@ -1029,34 +1030,30 @@ def create_martin_urban_conv_model(fingerprint_input, model_settings,
 #     name=None
 # )
 
-# # Second layer
-#   second_filter_width = 8
-#   second_filter_height = 10
-#   second_filter_count = 8
-#   second_weights = tf.compat.v1.get_variable(
-#       name='second_weights',
-#       initializer=tf.compat.v1.truncated_normal_initializer(stddev=0.01),
-#       shape=[
-#           second_filter_height, second_filter_width, first_filter_count,
-#           second_filter_count
-#       ])
-#   second_bias = tf.compat.v1.get_variable(
-#       name='second_bias',
-#       initializer=tf.compat.v1.zeros_initializer,
-#       shape=[second_filter_count])
-#   second_conv_stride_x = 8
-#   second_conv_stride_y = 8
-#   # skip pointwise by setting filters=None
-#   second_conv = tf.nn.separable_conv2d(
-#       input=first_dropout, filters=None,
-#       strides=[1, second_conv_stride_y, second_conv_stride_x, 1],
-#       padding='SAME') + second_bias
+# Second layer
+  second_filter_width = 3
+  second_filter_height = 3
+  second_filter_count = 64
+  second_weights = tf.compat.v1.get_variable(
+      name='second_weights',
+      initializer=tf.compat.v1.truncated_normal_initializer(stddev=0.01),
+      shape=[
+          second_filter_height, second_filter_width, first_filter_count,
+          second_filter_count
+      ])
+  second_bias = tf.compat.v1.get_variable(
+      name='second_bias',
+      initializer=tf.compat.v1.zeros_initializer,
+      shape=[second_filter_count])
+  second_conv_stride_x = 8
+  second_conv_stride_y = 8
+  # skip pointwise by setting filters=None
+  second_conv = tf.nn.separable_conv2d(
+      input=first_dropout, filters=None,
+      strides=[1, second_conv_stride_y, second_conv_stride_x, 1],
+      padding='SAME') + second_bias
   
-#       pointwise_conv = tf.nn.convolution2d(second_conv,
-#                                         first_weights,
-#                                        kernel_size=[1, 1],
-#                                         scope=sc+'/pw_conv')
-
+  first_relu = tf.nn.relu(first_conv)
 
 #   pointwise_conv = tf.nn.convolution2d(second_conv, )
 
@@ -1165,12 +1162,13 @@ def create_martin_tiny_conv_model(fingerprint_input, model_settings, is_training
   second_filter_width = 3
   second_filter_height = 3
   second_filter_count = 64
+  channel_multiplier = 1
   second_weights = tf.compat.v1.get_variable(
       name='second_weights',
       initializer=tf.compat.v1.truncated_normal_initializer(stddev=0.01),
       shape=[
-          second_filter_height, second_filter_width, first_filter_count,
-          second_filter_count
+          second_filter_height, second_filter_width, second_filter_count,
+          channel_multiplier
       ])
   second_bias = tf.compat.v1.get_variable(
       name='second_bias',
@@ -1180,7 +1178,7 @@ def create_martin_tiny_conv_model(fingerprint_input, model_settings, is_training
   #  second_conv_stride_y = 8
   second_conv_stride_x = 1
   second_conv_stride_y = 1
-  second_conv = tf.nn.conv2d(
+  second_conv = tf.nn.depthwise_conv2d(
       input=first_dropout, filters=second_weights,
       strides=[1, second_conv_stride_y, second_conv_stride_x, 1],
       padding='SAME') + second_bias
