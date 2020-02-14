@@ -1179,7 +1179,7 @@ def create_martin_tiny_conv_model(fingerprint_input, model_settings, is_training
   second_conv_stride_x = 1
   second_conv_stride_y = 1
   second_conv = tf.nn.depthwise_conv2d(
-      input=first_dropout, filters=second_weights,
+      input=first_dropout, filter=second_weights,
       strides=[1, second_conv_stride_y, second_conv_stride_x, 1],
       padding='SAME') + second_bias
   second_relu = tf.nn.relu(second_conv)
