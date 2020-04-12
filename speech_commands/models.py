@@ -758,6 +758,8 @@ def create_tiny_conv_model(fingerprint_input, model_settings, is_training):
     first_dropout = tf.compat.v1.nn.dropout(first_relu, dropout_prob)
   else:
     first_dropout = first_relu
+  
+  
   first_dropout_shape = first_dropout.get_shape()
   first_dropout_output_width = first_dropout_shape[2]
   first_dropout_output_height = first_dropout_shape[1]
