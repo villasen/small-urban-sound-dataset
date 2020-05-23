@@ -174,8 +174,8 @@ def get_features_range(model_settings):
     features_min = 0.0
     features_max = 127.5
   elif model_settings['preprocess'] == 'mfcc':
-    features_min = -247.0
-    features_max = 30.0
+    features_min = -1131.5847
+    features_max = 320.3708
   elif model_settings['preprocess'] == 'micro':
     features_min = 0.0
     features_max = 26.0
