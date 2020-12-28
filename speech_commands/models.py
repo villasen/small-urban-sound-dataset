@@ -1137,9 +1137,9 @@ def create_martin_tiny_conv_model(fingerprint_input, model_settings, is_training
   input_time_size = model_settings['spectrogram_length']
   fingerprint_4d = tf.reshape(fingerprint_input,
                               [-1, input_time_size, input_frequency_size, 1])
-  first_filter_width = 4  #time
+  first_filter_width = 8  #time
   first_filter_height = 10 #frequency
-  first_filter_count = 64  # channels
+  first_filter_count = 8  # channels
   first_weights = tf.compat.v1.get_variable(
       name='first_weights',
       initializer=tf.compat.v1.truncated_normal_initializer(stddev=0.01),
@@ -1161,9 +1161,9 @@ def create_martin_tiny_conv_model(fingerprint_input, model_settings, is_training
   else:
     first_dropout = first_relu
 
-  second_filter_width = 3
-  second_filter_height = 3
-  second_filter_count = 64
+  second_filter_width = 8
+  second_filter_height = 10
+  second_filter_count = 8
   channel_multiplier = 1
   second_weights = tf.compat.v1.get_variable(
       name='second_weights',
