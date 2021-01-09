@@ -179,9 +179,13 @@ def get_features_range(model_settings):
   elif model_settings['preprocess'] == 'micro':
     features_min = 0.0
     features_max = 26.0
+  elif model_settings['preprocess'] == 'librosa':
+    features_min = -1131.5847
+    features_max = 320.3708
+      
   else:
     raise Exception('Unknown preprocess mode "%s" (should be "mfcc",'
-                    ' "average", or "micro")' % (model_settings['preprocess']))
+                    ' "average", "micro", or "librosa")' % (model_settings['preprocess']))
   return features_min, features_max
 
 
