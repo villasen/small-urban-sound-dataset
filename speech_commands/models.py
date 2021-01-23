@@ -792,8 +792,9 @@ def create_tiny_conv_model(fingerprint_input, model_settings, is_training):
   else:
     return final_fc
 
-create_env_conv_model(fingerprint_input, model_settings,
-                                            is_training):
+
+
+def create_env_conv_model(fingerprint_input, model_settings, is_training):
   """Builds a convolutional model aimed at microcontrollers.
 
   Devices like DSPs and microcontrollers can have very small amounts of
