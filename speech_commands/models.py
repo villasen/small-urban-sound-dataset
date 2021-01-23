@@ -1126,9 +1126,9 @@ def create_martin_urban_conv_model(fingerprint_input, model_settings,
 
 
 # First layer
-  first_filter_width = 4
-  first_filter_height = 10
-  first_filter_count = 16
+  first_filter_width = 8
+  first_filter_height = 20
+  first_filter_count = 32
   first_weights = tf.compat.v1.get_variable(
       name='first_weights',
       initializer=tf.compat.v1.truncated_normal_initializer(stddev=0.01),
@@ -1152,29 +1152,7 @@ def create_martin_urban_conv_model(fingerprint_input, model_settings,
 
 
 
-
-# tf.nn.separable_conv2d(
-#     input,
-#     depthwise_filter,
-#     pointwise_filter,
-#     strides,
-#     padding,
-#     rate=None,
-#     name=None,
-#     data_format=None,
-#     dilations=None
-# )
-
-# tf.nn.conv2d(
-#     input,
-#     filters,
-#     strides,
-#     padding,
-#     data_format='NHWC',
-#     dilations=None,
-#     name=None
-# )
-
+'''
 # Second layer
   second_filter_width = 3
   second_filter_height = 3
@@ -1199,6 +1177,33 @@ def create_martin_urban_conv_model(fingerprint_input, model_settings,
       padding='SAME') + second_bias
   
   first_relu = tf.nn.relu(first_conv)
+'''
+  first_dropout_shape = first_dropout.get_shape()
+  first_dropout_output_width = first_dropout_shape[2]
+  first_dropout_output_height = first_dropout_shape[1]
+  first_dropout_element_count = int(
+      first_dropout_output_width * first_dropout_output_height *
+      first_filter_count)
+  flattened_first_dropout = tf.reshape(first_dropout,
+                                       [-1, first_dropout_element_count])
+  label_count = model_settings['label_count']
+  final_fc_weights = tf.compat.v1.get_variable(
+      name='final_fc_weights',
+      initializer=tf.compat.v1.truncated_normal_initializer(stddev=0.01),
+      shape=[first_dropout_element_count, label_count])
+  final_fc_bias = tf.compat.v1.get_variable(
+      name='final_fc_bias',
+      initializer=tf.compat.v1.zeros_initializer,
+      shape=[label_count])
+  final_fc = (
+      tf.matmul(flattened_first_dropout, final_fc_weights) + final_fc_bias)
+  if is_training:
+    return final_fc, dropout_prob
+  else:
+    return final_fc
+
+
+
 
 #   pointwise_conv = tf.nn.convolution2d(second_conv, )
 
