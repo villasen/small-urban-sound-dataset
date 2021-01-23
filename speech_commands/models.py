@@ -1127,7 +1127,7 @@ def create_martin_urban_conv_model(fingerprint_input, model_settings,
 # First layer
   first_filter_width = 4
   first_filter_height = 10
-  first_filter_count = 64
+  first_filter_count = 16
   first_weights = tf.compat.v1.get_variable(
       name='first_weights',
       initializer=tf.compat.v1.truncated_normal_initializer(stddev=0.01),
