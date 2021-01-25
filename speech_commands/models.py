@@ -86,6 +86,8 @@ def prepare_model_settings(label_count, sample_rate, clip_duration_ms,
   elif preprocess == 'micro':
     average_window_width = -1
     fingerprint_width = feature_bin_count
+  elif preprocess == 'librosa':
+    average_window_width = -1
   else:
     raise ValueError('Unknown preprocess mode "%s" (should be "mfcc",'
                      ' "average", or "micro")' % (preprocess))
