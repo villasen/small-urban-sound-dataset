@@ -26,6 +26,7 @@ import random
 import re
 import sys
 import tarfile
+import librosa
 
 import numpy as np
 from six.moves import urllib
@@ -460,6 +461,19 @@ class AudioProcessor(object):
             dct_coefficient_count=model_settings['fingerprint_width'])
         tf.compat.v1.summary.image(
             'mfcc', tf.expand_dims(self.output_, -1), max_outputs=1)
+      
+      elif model_settings['preprocess']== 'librosa':
+          sample_rate = model_settings['sample_rate']
+          
+          self.output_ =  librosa.feature.mfcc(spectrogram, sample_rate, n_mfcc=MFCC, n_fft=480, hop_length=320, norm='ortho')    
+
+
+            #    wave, sr = librosa.load(wavfile , mono=True, sr=None)
+
+
+
+
+
       elif model_settings['preprocess'] == 'micro':
         if not frontend_op:
           raise Exception(
