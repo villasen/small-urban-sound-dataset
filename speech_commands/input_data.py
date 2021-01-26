@@ -467,7 +467,7 @@ class AudioProcessor(object):
       elif model_settings['preprocess']== 'librosa':
           sample_rate = model_settings['sample_rate']
           
-          self.output_ =  librosa.feature.mfcc(spectrogram, sample_rate, n_mfcc=MFCC, n_fft=480, hop_length=320, norm='ortho')    
+          self.output_ =  librosa.feature.mfcc(spectrogram, sample_rate, n_mfcc=40, n_fft=480, hop_length=320, norm='ortho')    
 
 
             #    wave, sr = librosa.load(wavfile , mono=True, sr=None)
