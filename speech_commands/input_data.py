@@ -402,11 +402,14 @@ class AudioProcessor(object):
       self.wav_filename_placeholder_ = tf.compat.v1.placeholder(
           tf.string, [], name='wav_filename')
       wav_loader = io_ops.read_file(self.wav_filename_placeholder_)
+
       wav_decoder = contrib_audio.decode_wav(
           wav_loader, desired_channels=1, desired_samples=desired_samples)
       # Allow the audio sample's volume to be adjusted.
       self.foreground_volume_placeholder_ = tf.compat.v1.placeholder(
           tf.float32, [], name='foreground_volume')
+
+
       scaled_foreground = tf.multiply(wav_decoder.audio,
                                       self.foreground_volume_placeholder_)
       # Shift the sample's start position, and pad any gaps with zeros.
@@ -467,10 +470,9 @@ class AudioProcessor(object):
       elif model_settings['preprocess']== 'librosa':
           sample_rate = model_settings['sample_rate']
           
-          print("Sprectrogram : ")
-          print(spectrogram)
+          print("Sprectrogram ")
 
-          self.output_ =  librosa.feature.mfcc(spectrogram, sample_rate, n_mfcc=40, n_fft=480, hop_length=320, norm='ortho')    
+          self.output_ =  librosa.feature.mfcc(background_clamp, sample_rate, n_mfcc=40, n_fft=480, hop_length=320, norm='ortho')    
 
 
             #    wave, sr = librosa.load(wavfile , mono=True, sr=None)
