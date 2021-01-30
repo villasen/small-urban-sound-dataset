@@ -471,11 +471,14 @@ class AudioProcessor(object):
           sample_rate = model_settings['sample_rate']
           
           print("Sprectrogram ")
+          int16_input = tf.cast(tf.multiply(background_clamp, 32768), tf.int16)
+          self.output_ =  librosa.feature.mfcc(int16_input, sample_rate, n_mfcc=40, n_fft=480, hop_length=320, norm='ortho')    
 
-          self.output_ =  librosa.feature.mfcc(background_clamp, sample_rate, n_mfcc=40, n_fft=480, hop_length=320, norm='ortho')    
-
-
-            #    wave, sr = librosa.load(wavfile , mono=True, sr=None)
+          tf.compat.v1.summary.image(
+              'librosa',
+              tf.expand_dims(tf.expand_dims(self.output_, -1), 0),
+              max_outputs=1)
+              #    wave, sr = librosa.load(wavfile , mono=True, sr=None)
 
 
 
